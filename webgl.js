@@ -4,6 +4,7 @@ var gl,
 // 1. Setting Up WebGL
 initGL();
 createShaders();
+createVertices();
 draw();
 
 function initGL() {
@@ -15,12 +16,17 @@ function initGL() {
 	// didn't do anything
 }
 
+// todo:
+// o experiment with data
+// o refact duplication
 function createShaders() {
 	// vertex shader
 	var vertexShaderSource = "";
+	vertexShaderSource += "attribute vec4 coords;";
+	vertexShaderSource += "attribute float pointSize;"
 	vertexShaderSource += "void main(void) {";
-	vertexShaderSource += "	gl_Position = vec4(0.5, 0.5, 0.0, 1.0);";	//position in world
-	vertexShaderSource += "	gl_PointSize = 100.0;";		// size of point rendered
+	vertexShaderSource += "	gl_Position = coords;";	//position in world
+	vertexShaderSource += "	gl_PointSize = pointSize;";		// size of point rendered
 	vertexShaderSource += "}";
 
 	var vertexShader = gl.createShader(gl.VERTEX_SHADER);
@@ -29,8 +35,10 @@ function createShaders() {
 
 	// fragment shader
 	var fragmentShaderSource = "";
+	fragmentShaderSource += "precision mediump float;"
+	fragmentShaderSource += "uniform vec4 color;"
 	fragmentShaderSource += "void main(void) {";
-	fragmentShaderSource += "	gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);";	// color of point
+	fragmentShaderSource += "	gl_FragColor = color;";	// color of point
 	fragmentShaderSource += "}";
 
 	var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
@@ -42,6 +50,17 @@ function createShaders() {
 	gl.attachShader(shaderProgram, fragmentShader);
 	gl.linkProgram(shaderProgram);
 	gl.useProgram(shaderProgram);
+}
+
+function createVertices() {
+	var coords = gl.getAttribLocation(shaderProgram, "coords");
+	gl.vertexAttrib3f(coords, 0, 0, 0);
+
+	var pointSize = gl.getAttribLocation(shaderProgram, "pointSize");
+	gl.vertexAttrib1f(pointSize, 100);
+
+	var color = gl.getUniformLocation(shaderProgram, "color");
+	gl.uniform4f(color, 1, 1, 0, 1);
 }
 
 function draw() {
