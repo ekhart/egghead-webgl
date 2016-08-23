@@ -23,7 +23,7 @@ function createShaders() {
 	// vertex shader
 	var vertexShaderSource = "";
 	vertexShaderSource += "attribute vec4 coords;";
-	vertexShaderSource += "attribute float pointSize;"
+	vertexShaderSource += "attribute float pointSize;";
 	vertexShaderSource += "void main(void) {";
 	vertexShaderSource += "	gl_Position = coords;";	//position in world
 	vertexShaderSource += "	gl_PointSize = pointSize;";		// size of point rendered
@@ -35,8 +35,8 @@ function createShaders() {
 
 	// fragment shader
 	var fragmentShaderSource = "";
-	fragmentShaderSource += "precision mediump float;"
-	fragmentShaderSource += "uniform vec4 color;"
+	fragmentShaderSource += "precision mediump float;";
+	fragmentShaderSource += "uniform vec4 color;";
 	fragmentShaderSource += "void main(void) {";
 	fragmentShaderSource += "	gl_FragColor = color;";	// color of point
 	fragmentShaderSource += "}";
@@ -57,10 +57,10 @@ function createVertices() {
 	gl.vertexAttrib3f(coords, 0, 0, 0);
 
 	var pointSize = gl.getAttribLocation(shaderProgram, "pointSize");
-	gl.vertexAttrib1f(pointSize, 100);
+	gl.vertexAttrib1f(pointSize, 10);
 
 	var color = gl.getUniformLocation(shaderProgram, "color");
-	gl.uniform4f(color, 1, 1, 0, 1);
+	gl.uniform4f(color, 0, 1, 1, 1);
 }
 
 function draw() {
