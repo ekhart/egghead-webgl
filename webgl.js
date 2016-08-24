@@ -60,7 +60,7 @@ function createVertices() {
 
 	var buffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.DYNAMIC_DRAW);
 	// gl.bindBuffer(gl.ARRAY_BUFFER, null); 	// for simple program with one buffer it its make points moving
 	// but for more buffers we need to
 
@@ -82,11 +82,11 @@ function draw() {
 		vertices[i] += Math.random() * 0.01 - 0.005;
 		vertices[i + 1] += Math.random() * 0.01 - 0.005;
 	}
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-
-	requestAnimationFrame(draw);
+	gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(vertices));
 
 	gl.clear(gl.COLOR_BUFFER_BIT);
+
+	requestAnimationFrame(draw);
 
 	// gl.POINTS - draw points
 	// gl.LINES - draw lines from buffer from point 1 to 2 [x1, y1, z1, x2, y2, z2]
