@@ -92,8 +92,18 @@ function createVertices() {
 
 function draw() {
 	for (var i = 0; i < vertexCount * 2; i += 2) {
-		vertices[i] += Math.random() * 0.01 - 0.005;
-		vertices[i + 1] += Math.random() * 0.01 - 0.005;
+		var dx = vertices[i] - mouseX,
+			dy = vertices[i + 1] - mouseY,
+			dist = Math.sqrt(dx * dx + dy * dy);
+
+		if (dist < 0.2) {
+			vertices[i] = mouseX + dx / dist * 0.2;
+			vertices[i + 1] = mouseY + dy / dist * 0.2;
+		}
+		else {
+			vertices[i] += Math.random() * 0.01 - 0.005;
+			vertices[i + 1] += Math.random() * 0.01 - 0.005;
+		}
 	}
 	gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(vertices));
 
