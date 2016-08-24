@@ -23,30 +23,8 @@ function initGL() {
 // o under functions (reference at web)
 
 function createShaders() {
-	// vertex shader
-	var vertexShaderSource = "";
-	vertexShaderSource += "attribute vec4 coords;";
-	vertexShaderSource += "attribute float pointSize;";
-	vertexShaderSource += "void main(void) {";
-	vertexShaderSource += "	gl_Position = coords;";	//position in world
-	vertexShaderSource += "	gl_PointSize = pointSize;";		// size of point rendered
-	vertexShaderSource += "}";
-
-	var vertexShader = gl.createShader(gl.VERTEX_SHADER);
-	gl.shaderSource(vertexShader, vertexShaderSource);
-	gl.compileShader(vertexShader);
-
-	// fragment shader
-	var fragmentShaderSource = "";
-	fragmentShaderSource += "precision mediump float;";
-	fragmentShaderSource += "uniform vec4 color;";
-	fragmentShaderSource += "void main(void) {";
-	fragmentShaderSource += "	gl_FragColor = color;";	// color of point
-	fragmentShaderSource += "}";
-
-	var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-	gl.shaderSource(fragmentShader, fragmentShaderSource);
-	gl.compileShader(fragmentShader);
+	var vertexShader = getShader(gl, "shader-vs");
+	var fragmentShader = getShader(gl, "shader-fs");
 
 	shaderProgram = gl.createProgram();
 	gl.attachShader(shaderProgram, vertexShader);
