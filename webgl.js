@@ -88,5 +88,9 @@ function draw() {
 
 	// gl.POINTS - draw points
 	// gl.LINES - draw lines from buffer from point 1 to 2 [x1, y1, z1, x2, y2, z2]
-	gl.drawArrays(gl.LINE_LOOP, 0, 3);
+	// gl.LINE_STRIP - not closed triangle from lines
+	// gl.LINE_LOOP - triangle from lines
+	// gl.TRIANGLES - filled triangle
+	// https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawArrays
+	gl.drawArrays(gl.TRIANGLES, 0, 3);
 }
