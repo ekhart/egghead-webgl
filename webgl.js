@@ -61,13 +61,14 @@ function createVertices() {
 	var buffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+	// gl.bindBuffer(gl.ARRAY_BUFFER, null); 	// for simple program with one buffer it its make points moving
+	// but for more buffers we need to
 
 	// pass data to shaders
 	var coords = gl.getAttribLocation(shaderProgram, "coords");
 	// gl.vertexAttrib3f(coords, 0, 0, 0);
 	gl.vertexAttribPointer(coords, 2, gl.FLOAT, false, 0, 0);
 	gl.enableVertexAttribArray(coords);
-	gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
 	var pointSize = gl.getAttribLocation(shaderProgram, "pointSize");
 	gl.vertexAttrib1f(pointSize, 1);
@@ -77,6 +78,14 @@ function createVertices() {
 }
 
 function draw() {
+	for (var i = 0; i < vertexCount * 2; i += 2) {
+		vertices[i] += Math.random() * 0.01 - 0.005;
+		vertices[i + 1] += Math.random() * 0.01 - 0.005;
+	}
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+	requestAnimationFrame(draw);
+
 	gl.clear(gl.COLOR_BUFFER_BIT);
 
 	// gl.POINTS - draw points
