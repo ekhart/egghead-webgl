@@ -56,13 +56,16 @@ function createShaders() {
 }
 
 function createVertices() {
+	// 4. Create 3D Graphics in JavaScript Using WebGL
 	// webgl use cartesian (-1, 1), (0, 0) - center
 	// [x1, y1, z1, x2, y2, z2, ...]
 	vertices = [
 		-0.9, -0.9, 0.0,
 		0.9, -0.9, 0.0,
+		0.9, -0.9, 0.0,
 		0.0, 0.9, 0.0,
-		0.5, 0.5, 0.0
+		0.0, 0.9, 0.0,
+		-0.9, -0.9, 0.0,
 	];
 
 	var buffer = gl.createBuffer();
@@ -80,11 +83,13 @@ function createVertices() {
 	gl.vertexAttrib1f(pointSize, 10);
 
 	var color = gl.getUniformLocation(shaderProgram, "color");
-	gl.uniform4f(color, 0, 1, 1, 1);
+	gl.uniform4f(color, 0, 0, 0, 1);
 }
 
 function draw() {
 	gl.clear(gl.COLOR_BUFFER_BIT);
 
-	gl.drawArrays(gl.POINTS, 0, 4);
+	// gl.POINTS - draw points
+	// gl.LINES - draw lines from buffer from point 1 to 2 [x1, y1, z1, x2, y2, z2]
+	gl.drawArrays(gl.LINES, 0, 6);
 }
