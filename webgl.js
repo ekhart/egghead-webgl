@@ -1,5 +1,6 @@
 var gl,
-	shaderProgram;
+	shaderProgram,
+	vertices;
 
 // 1. Setting Up WebGL
 initGL();
@@ -19,6 +20,8 @@ function initGL() {
 // todo:
 // o experiment with data
 // o refact duplication
+// o under functions (reference at web)
+
 function createShaders() {
 	// vertex shader
 	var vertexShaderSource = "";
@@ -53,8 +56,25 @@ function createShaders() {
 }
 
 function createVertices() {
+	// webgl use cartesian (-1, 1), (0, 0) - center
+	// [x1, y1, z1, x2, y2, z2, ...]
+	vertices = [
+		-0.9, -0.9, 0.0,
+		0.9, -0.9, 0.0,
+		0.0, 0.9, 0.0,
+		0.5, 0.5, 0.0
+	];
+
+	var buffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+	// pass data to shaders
 	var coords = gl.getAttribLocation(shaderProgram, "coords");
-	gl.vertexAttrib3f(coords, 0, 0, 0);
+	// gl.vertexAttrib3f(coords, 0, 0, 0);
+	gl.vertexAttribPointer(coords, 3, gl.FLOAT, false, 0, 0);
+	gl.enableVertexAttribArray(coords);
+	gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
 	var pointSize = gl.getAttribLocation(shaderProgram, "pointSize");
 	gl.vertexAttrib1f(pointSize, 10);
@@ -66,5 +86,5 @@ function createVertices() {
 function draw() {
 	gl.clear(gl.COLOR_BUFFER_BIT);
 
-	gl.drawArrays(gl.POINTS, 0, 1);
+	gl.drawArrays(gl.POINTS, 0, 4);
 }
