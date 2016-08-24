@@ -88,5 +88,5 @@ function draw() {
 
 	// gl.POINTS - draw points
 	// gl.LINES - draw lines from buffer from point 1 to 2 [x1, y1, z1, x2, y2, z2]
-	gl.drawArrays(gl.LINE_STRIP, 0, 3);
+	gl.drawArrays(gl.LINE_LOOP, 0, 3);
 }
