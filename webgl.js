@@ -1,6 +1,7 @@
 var gl,
 	shaderProgram,
-	vertices;
+	vertices,
+	vertexCount = 5000;
 
 // 1. Setting Up WebGL
 initGL();
@@ -21,6 +22,7 @@ function initGL() {
 // o experiment with data
 // o refact duplication
 // o under functions (reference at web)
+// o move shaders to separate files
 
 function createShaders() {
 	var vertexShader = getShader(gl, "shader-vs");
@@ -37,18 +39,24 @@ function createVertices() {
 	// 4. Create 3D Graphics in JavaScript Using WebGL
 	// webgl use cartesian (-1, 1), (0, 0) - center
 	// [x1, y1, z1, x2, y2, z2, ...]
-	vertices = [
-		-0.9, .5, 0,
-		-0.7, -.5, 0,
-		-.5, .5, 0,
-		-.3, -.5, 0,
-		-.1, .5, 0,
-		.1, -.5, 0,
-		.3, .5, 0,
-		.5, -.5, 0,
-		0.7, .5, 0,
-		0.9, -.5, 0,
-	];
+	// vertices = [
+	// 	-0.9, .5, 0,
+	// 	-0.7, -.5, 0,
+	// 	-.5, .5, 0,
+	// 	-.3, -.5, 0,
+	// 	-.1, .5, 0,
+	// 	.1, -.5, 0,
+	// 	.3, .5, 0,
+	// 	.5, -.5, 0,
+	// 	0.7, .5, 0,
+	// 	0.9, -.5, 0,
+	// ];
+
+	vertices = [];
+	for (var i = 0; i < vertexCount; ++i) {
+		vertices.push(Math.random() * 2 - 1);
+		vertices.push(Math.random() * 2 - 1);
+	}
 
 	var buffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -57,12 +65,12 @@ function createVertices() {
 	// pass data to shaders
 	var coords = gl.getAttribLocation(shaderProgram, "coords");
 	// gl.vertexAttrib3f(coords, 0, 0, 0);
-	gl.vertexAttribPointer(coords, 3, gl.FLOAT, false, 0, 0);
+	gl.vertexAttribPointer(coords, 2, gl.FLOAT, false, 0, 0);
 	gl.enableVertexAttribArray(coords);
 	gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
 	var pointSize = gl.getAttribLocation(shaderProgram, "pointSize");
-	gl.vertexAttrib1f(pointSize, 10);
+	gl.vertexAttrib1f(pointSize, 1);
 
 	var color = gl.getUniformLocation(shaderProgram, "color");
 	gl.uniform4f(color, 0, 0, 0, 1);
@@ -79,8 +87,10 @@ function draw() {
 	// https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawArrays
 	// gl.drawArrays(gl.LINE_STRIP, 5, 5);
 
-	gl.drawArrays(gl.LINE_STRIP, 0, 3);
-	gl.drawArrays(gl.LINE_STRIP, 7, 3);
+	// gl.drawArrays(gl.LINE_STRIP, 0, 3);
+	// gl.drawArrays(gl.LINE_STRIP, 7, 3);
+
+	gl.drawArrays(gl.POINTS, 0, vertexCount);
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL
