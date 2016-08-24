@@ -1,7 +1,20 @@
 var gl,
 	shaderProgram,
 	vertices,
-	vertexCount = 5000;
+	vertexCount = 5000,
+	mouseX = 0,
+	mouseY = 0;
+
+// convert canvas coordinate system (with (0,0) at left top corner)
+// to WebGL coords system (with (0,0) at center of canvas)
+canvas.addEventListener("mousemove", function(event) {
+	mouseX = map(event.clientX, 0, canvas.width, -1, 1);
+	mouseY = map(event.clientY, 0, canvas.height, 1, -1);
+});
+
+function map(value, minSrc, maxSrc, minDst, maxDst) {
+	return (value - minSrc) / (maxSrc - minSrc) * (maxDst - minDst) + minDst;
+}
 
 // 1. Setting Up WebGL
 initGL();
