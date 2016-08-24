@@ -60,9 +60,16 @@ function createVertices() {
 	// webgl use cartesian (-1, 1), (0, 0) - center
 	// [x1, y1, z1, x2, y2, z2, ...]
 	vertices = [
-		-0.9, -0.9, 0.0,
-		0.9, -0.9, 0.0,
-		0.0, 0.9, 0.0,
+		-0.9, .5, 0,
+		-0.7, -.5, 0,
+		-.5, .5, 0,
+		-.3, -.5, 0,
+		-.1, .5, 0,
+		.1, -.5, 0,
+		.3, .5, 0,
+		.5, -.5, 0,
+		0.7, .5, 0,
+		0.9, -.5, 0,
 	];
 
 	var buffer = gl.createBuffer();
@@ -92,5 +99,8 @@ function draw() {
 	// gl.LINE_LOOP - triangle from lines
 	// gl.TRIANGLES - filled triangle
 	// https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/drawArrays
-	gl.drawArrays(gl.TRIANGLES, 0, 3);
+	// gl.drawArrays(gl.LINE_STRIP, 5, 5);
+
+	gl.drawArrays(gl.LINE_STRIP, 0, 3);
+	gl.drawArrays(gl.LINE_STRIP, 7, 3);
 }
