@@ -1,10 +1,11 @@
 var gl,
 	shaderProgram,
 	vertices,
-	vertexCount = 5000,
+	// vertexCount = 5000,
+	vertexCount = 30,
 	mouseX = 0,
 	mouseY = 0,
-	angle = 0;
+	matrix = mat4.create();
 
 // convert canvas coordinate system (with (0,0) at left top corner)
 // to WebGL coords system (with (0,0) at center of canvas)
@@ -74,11 +75,18 @@ function createVertices() {
 	// 	vertices.push(Math.random() * 2 - 1);
 	// }
 
-	vertices = [
-		-0.9, -0.9, 0.0,
-		0.9, -0.9, 0.0,
-		0.0, 0.9, 0.0,
-	];
+	// vertices = [
+	// 	-0.9, -0.9, 0.0,
+	// 	0.9, -0.9, 0.0,
+	// 	0.0, 0.9, 0.0,
+	// ];
+
+	vertices = [];
+	for (var i = 0; i < vertexCount; i++) {
+		vertices.push(Math.random() * 2 - 1);
+		vertices.push(Math.random() * 2 - 1);
+		vertices.push(Math.random() * 2 - 1);
+	}
 
 	var buffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -120,7 +128,6 @@ function draw() {
 
 	gl.clear(gl.COLOR_BUFFER_BIT);
 
-
 	// gl.POINTS - draw points
 	// gl.LINES - draw lines from buffer from point 1 to 2 [x1, y1, z1, x2, y2, z2]
 	// gl.LINE_STRIP - not closed triangle from lines
@@ -134,37 +141,41 @@ function draw() {
 
 	// gl.drawArrays(gl.POINTS, 0, vertexCount);
 
-	rotateY(angle += 0.01);		// rotate flat shape
-	gl.drawArrays(gl.TRIANGLES, 0, 3);
+	mat4.rotateY(matrix, matrix, 0.01);
+	mat4.rotateZ(matrix, matrix, 0.01);
+	var transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
+	gl.uniformMatrix4fv(transformMatrix, false, matrix);
+
+	gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
 	requestAnimationFrame(draw);
 }
 
-function rotateY(angle) {
-	var cos = Math.cos(angle),
-		sin = Math.sin(angle),
-		matrix = new Float32Array(
-			[cos, 0, sin, 0,
-			   0, 1,   0, 0,
-			-sin, 0, cos, 0,
-			   0, 0,   0, 1]);
+// function rotateY(angle) {
+// 	var cos = Math.cos(angle),
+// 		sin = Math.sin(angle),
+// 		matrix = new Float32Array(
+// 			[cos, 0, sin, 0,
+// 			   0, 1,   0, 0,
+// 			-sin, 0, cos, 0,
+// 			   0, 0,   0, 1]);
 
-	var transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
-	gl.uniformMatrix4fv(transformMatrix, false, matrix);
-}
+// 	var transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
+// 	gl.uniformMatrix4fv(transformMatrix, false, matrix);
+// }
 
-// column order of matrix in WebGL
-function rotateZ(angle) {
-	var cos = Math.cos(angle),
-		sin = Math.sin(angle),
-		matrix = new Float32Array(
-			[cos, sin, 0, 0,
-			-sin, cos, 0, 0,
-			0, 0, 1, 0,
-			0, 0, 0, 1]);
+// // column order of matrix in WebGL
+// function rotateZ(angle) {
+// 	var cos = Math.cos(angle),
+// 		sin = Math.sin(angle),
+// 		matrix = new Float32Array(
+// 			[cos, sin, 0, 0,
+// 			-sin, cos, 0, 0,
+// 			0, 0, 1, 0,
+// 			0, 0, 0, 1]);
 
-	var transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
-	gl.uniformMatrix4fv(transformMatrix, false, matrix);
-}
+// 	var transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
+// 	gl.uniformMatrix4fv(transformMatrix, false, matrix);
+// }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL
 // https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Adding_2D_content_to_a_WebGL_context
