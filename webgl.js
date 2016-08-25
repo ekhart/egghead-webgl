@@ -3,7 +3,8 @@ var gl,
 	vertices,
 	vertexCount = 5000,
 	mouseX = 0,
-	mouseY = 0;
+	mouseY = 0,
+	angle = 0;
 
 // convert canvas coordinate system (with (0,0) at left top corner)
 // to WebGL coords system (with (0,0) at center of canvas)
@@ -65,11 +66,17 @@ function createVertices() {
 	// 	0.9, -.5, 0,
 	// ];
 
-	vertices = [];
-	for (var i = 0; i < vertexCount; ++i) {
-		vertices.push(Math.random() * 2 - 1);
-		vertices.push(Math.random() * 2 - 1);
-	}
+	// vertices = [];
+	// for (var i = 0; i < vertexCount; ++i) {
+	// 	vertices.push(Math.random() * 2 - 1);
+	// 	vertices.push(Math.random() * 2 - 1);
+	// }
+
+	vertices = [
+		-0.9, -0.9, 0.0,
+		0.9, -0.9, 0.0,
+		0.0, 0.9, 0.0,
+	];
 
 	var buffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -80,7 +87,7 @@ function createVertices() {
 	// pass data to shaders
 	var coords = gl.getAttribLocation(shaderProgram, "coords");
 	// gl.vertexAttrib3f(coords, 0, 0, 0);
-	gl.vertexAttribPointer(coords, 2, gl.FLOAT, false, 0, 0);
+	gl.vertexAttribPointer(coords, 3, gl.FLOAT, false, 0, 0);
 	gl.enableVertexAttribArray(coords);
 
 	var pointSize = gl.getAttribLocation(shaderProgram, "pointSize");
@@ -91,25 +98,26 @@ function createVertices() {
 }
 
 function draw() {
-	for (var i = 0; i < vertexCount * 2; i += 2) {
-		var dx = vertices[i] - mouseX,
-			dy = vertices[i + 1] - mouseY,
-			dist = Math.sqrt(dx * dx + dy * dy);
+	// draw animated sand
+	// for (var i = 0; i < vertexCount * 2; i += 2) {
+	// 	var dx = vertices[i] - mouseX,
+	// 		dy = vertices[i + 1] - mouseY,
+	// 		dist = Math.sqrt(dx * dx + dy * dy);
 
-		if (dist < 0.2) {
-			vertices[i] = mouseX + dx / dist * 0.2;
-			vertices[i + 1] = mouseY + dy / dist * 0.2;
-		}
-		else {
-			vertices[i] += Math.random() * 0.01 - 0.005;
-			vertices[i + 1] += Math.random() * 0.01 - 0.005;
-		}
-	}
-	gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(vertices));
+	// 	if (dist < 0.2) {
+	// 		vertices[i] = mouseX + dx / dist * 0.2;
+	// 		vertices[i + 1] = mouseY + dy / dist * 0.2;
+	// 	}
+	// 	else {
+	// 		vertices[i] += Math.random() * 0.01 - 0.005;
+	// 		vertices[i + 1] += Math.random() * 0.01 - 0.005;
+	// 	}
+	// }
+	// gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Float32Array(vertices));
+	// requestAnimationFrame(draw);
 
 	gl.clear(gl.COLOR_BUFFER_BIT);
 
-	requestAnimationFrame(draw);
 
 	// gl.POINTS - draw points
 	// gl.LINES - draw lines from buffer from point 1 to 2 [x1, y1, z1, x2, y2, z2]
@@ -122,7 +130,25 @@ function draw() {
 	// gl.drawArrays(gl.LINE_STRIP, 0, 3);
 	// gl.drawArrays(gl.LINE_STRIP, 7, 3);
 
-	gl.drawArrays(gl.POINTS, 0, vertexCount);
+	// gl.drawArrays(gl.POINTS, 0, vertexCount);
+
+	rotateZ(angle += 0.01);
+	gl.drawArrays(gl.TRIANGLES, 0, 3);
+	requestAnimationFrame(draw);
+}
+
+// column order of matrix in WebGL
+function rotateZ(angle) {
+	var cos = Math.cos(angle),
+		sin = Math.sin(angle),
+		matrix = new Float32Array(
+			[cos, sin, 0, 0,
+			-sin, cos, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1]);
+
+	var transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
+	gl.uniformMatrix4fv(transformMatrix, false, matrix);
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL
@@ -177,3 +203,4 @@ function getShader(gl, id) {
 
   return shader;
 }
+
