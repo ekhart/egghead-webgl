@@ -37,6 +37,8 @@ function initGL() {
 // o refact duplication
 // o under functions (reference at web)
 // o move shaders to separate files
+// o experiment with other transformation
+// o add new shapes then transform
 
 function createShaders() {
 	var vertexShader = getShader(gl, "shader-vs");
@@ -132,9 +134,22 @@ function draw() {
 
 	// gl.drawArrays(gl.POINTS, 0, vertexCount);
 
-	rotateZ(angle += 0.01);
+	rotateY(angle += 0.01);		// rotate flat shape
 	gl.drawArrays(gl.TRIANGLES, 0, 3);
 	requestAnimationFrame(draw);
+}
+
+function rotateY(angle) {
+	var cos = Math.cos(angle),
+		sin = Math.sin(angle),
+		matrix = new Float32Array(
+			[cos, 0, sin, 0,
+			   0, 1,   0, 0,
+			-sin, 0, cos, 0,
+			   0, 0,   0, 1]);
+
+	var transformMatrix = gl.getUniformLocation(shaderProgram, "transformMatrix");
+	gl.uniformMatrix4fv(transformMatrix, false, matrix);
 }
 
 // column order of matrix in WebGL
